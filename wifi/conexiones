@@ -1,1 +1,4 @@
 No hay ninguna conexión implementada al arduino, este se conecta a traves del WiFi de IFP el cual le brinda una dirección IP, lo que permite al arduino el navegar por al red.
+
+Las liberrias que he usado ya venian ya instaladas en el propio arduino
+
