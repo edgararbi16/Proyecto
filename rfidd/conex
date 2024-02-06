@@ -1,0 +1,9 @@
+rdfi esp32 
+
+RDIF SDA al esp32 D22
+RDIF SCK al Esp32 D14
+RDIF MOSI al Esp32 D16
+RDIF MISO al Esp32 D17
+RDIF GND al Powermb GND
+RDIF RST al Esp32 D21
+RDIF 3v3 al Powermb2 3v3
