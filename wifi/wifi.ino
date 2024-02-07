@@ -2,8 +2,8 @@
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 
-const char* ssid = "IFP";   // escribir aquí el SSID de una WiFi
-const char* password = "ifpformacion"; // escribir aquí la contraseña de la WiFi 
+const char* ssid = "tu_wifi";   // escribir aquí el SSID de una WiFi
+const char* password = "tu_contraseña"; // escribir aquí la contraseña de la WiFi 
 
 void setup(){ 
   Serial.begin(9600); // abre un puerto serie y establece la velocidad de transmisión
