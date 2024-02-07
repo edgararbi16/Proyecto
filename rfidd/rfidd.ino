@@ -1,31 +1,38 @@
-#include <MFRC522.h>
+
 #include <SPI.h>
+/* Include the RFID library */
+#include <RFID.h>
 
-#define SDA_PIN 22 // Pin SDA
-#define SCK_PIN 14 // Pin alternativo para SCK
-#define MOSI_PIN 16 // Pin MOSI
-#define MISO_PIN 17 // Pin MISO
-#define RST_PIN 21 // Pin de reset
+/* Define the DIO used for the SDA (SS) and RST (reset) pins. */
+#define SDA_DIO 9
+#define RESET_DIO 8
+/* Create an instance of the RFID library */
+RFID RC522(SDA_DIO, RESET_DIO); 
 
-MFRC522 mfrc522(SDA_PIN, RST_PIN); // Inicializa el objeto MFRC522
-
-void setup() {
-  Serial.begin(115200); // Inicializa la comunicación serial
-  SPI.begin(SCK_PIN, MISO_PIN, MOSI_PIN, SDA_PIN); // Inicializa SPI
-  mfrc522.PCD_Init(); // Inicializa el lector RFID
-  Serial.println("Lector RFID listo para leer...");
+void setup()
+{ 
+  Serial.begin(9600);
+  /* Enable the SPI interface */
+  SPI.begin(); 
+  /* Initialise the RFID reader */
+  RC522.init();
 }
 
-void loop() {
-  // Verifica si hay tarjetas presentes
-  if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
-    // Lee el UID de la tarjeta
-    Serial.print("UID de la tarjeta:");
-    for (byte i = 0; i < mfrc522.uid.size; i++) {
-      Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
-      Serial.print(mfrc522.uid.uidByte[i], HEX);
+void loop()
+{
+  /* Has a card been detected? */
+  if (RC522.isCard())
+  {
+    /* If so then get its serial number */
+    RC522.readCardSerial();
+    Serial.println("Card detected:");
+    for(int i=0;i<5;i++)
+    {
+    Serial.print(RC522.serNum[i],HEX);
+    //Serial.print(RC522.serNum[i],HEX); //to print card detail in Hexa Decimal format
     }
-    Serial.println(); // Imprime una nueva línea
-    mfrc522.PICC_HaltA(); // Detiene la comunicación con la tarjeta actual
+    Serial.println();
+    Serial.println();
   }
+  delay(1000);
 }
