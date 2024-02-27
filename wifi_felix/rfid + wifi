@@ -1,0 +1,60 @@
+// Aun no sin comprobar
+
+#include <SPI.h>
+#include <RFID.h>
+#include <WiFi.h>
+
+const char* ssid = "IFP";         // Nombre de la red WiFi
+const char* password = "ifpformacion"; // Contraseña de la red WiFi
+
+/* Define the DIO used for the SDA (SS) and RST (reset) pins. */
+#define SDA_DIO 9
+#define RESET_DIO 8
+/* Create an instance of the RFID library */
+RFID RC522(SDA_DIO, RESET_DIO); 
+
+IPAddress localIP(192, 168, 1, 123); // Dirección IP estática
+IPAddress gateway(192, 168, 1, 1);    // Puerta de enlace
+IPAddress subnet(255, 255, 255, 0);   // Máscara de subred
+IPAddress dns(8, 8, 8, 8);            // Dirección IP del servidor DNS (puedes usar otra dirección si lo prefieres)
+
+void setup() {
+  Serial.begin(115200);
+
+  // Inicialización del lector RFID
+  SPI.begin(); 
+  RC522.init();
+
+  // Conectar a la red WiFi
+  Serial.printf("Conectando a %s ", ssid);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  // Asignar la dirección IP estática
+  WiFi.config(localIP, gateway, subnet, dns);
+
+  // Imprimir la dirección IP asignada
+  Serial.print("\nIP asignada: ");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+  // Lectura RFID
+  if (RC522.isCard())
+  {
+    /* Si se detecta una tarjeta, obten su número de serie */
+    RC522.readCardSerial();
+    Serial.println("Tarjeta detectada:");
+    for(int i=0;i<5;i++)
+    {
+      Serial.print(RC522.serNum[i], HEX);
+    }
+    Serial.println();
+    Serial.println();
+  }
+  delay(1000);
+}
